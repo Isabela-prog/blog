@@ -14,7 +14,7 @@ function Cadastro() {
   const[confirmaSenha, setConfirmaSenha] = useState<string>("")
 
   const [usuario, setUsuario] = useState<Usuario>({
-    id: 0,
+    id: null,
     nome: '',
     usuario: '',
     senha: '',
@@ -22,7 +22,7 @@ function Cadastro() {
   })
   
   useEffect(() => {
-    if (usuario.id !== 0){
+    if (usuario.id !== 0 && usuario.id !== null){
       retornar()
     }
   }, [usuario])
@@ -45,15 +45,18 @@ function Cadastro() {
 
   async function cadastrarNovoUsuario(e: FormEvent<HTMLFormElement>){
     e.preventDefault()
+    console.log("Tentando cadastrar:", usuario); 
 
     if(confirmaSenha === usuario.senha && usuario.senha.length >= 8){
 
       setIsLoading(true)
+      
 
       try{
-        await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuario)
+        await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario)
         alert('Usuário cadastrado com sucesso!')
-      }catch(error){
+      }catch(error: any){
+        console.error('Erro no cadastro:', error)
         alert('Erro ao cadastrar o usuário!')
       }
     }else{
